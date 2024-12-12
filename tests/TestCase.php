@@ -2,9 +2,9 @@
 
 namespace Fase22\Laramaid\Tests;
 
+use Fase22\Laramaid\LaramaidServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Fase22\Laramaid\LaramaidServiceProvider;
 
 class TestCase extends Orchestra
 {

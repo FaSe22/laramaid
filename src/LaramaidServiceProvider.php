@@ -2,9 +2,9 @@
 
 namespace Fase22\Laramaid;
 
+use Fase22\Laramaid\Commands\LaramaidCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Fase22\Laramaid\Commands\LaramaidCommand;
 
 class LaramaidServiceProvider extends PackageServiceProvider
 {

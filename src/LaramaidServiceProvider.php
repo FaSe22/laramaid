@@ -22,6 +22,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
             ->hasMigration('create_laramaid_table')
             ->hasCommand(LaramaidCommand::class);
     }
+
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {

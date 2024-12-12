@@ -15,12 +15,14 @@ class LaramaidCommand extends Command
         $targetDirectory = $this->argument('target_directory');
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (!file_exists($mermaidFilePath)) {
-            $this->error("Error: Mermaid file not found");
+        if (! file_exists($mermaidFilePath)) {
+            $this->error('Error: Mermaid file not found');
+
             return self::FAILURE;
         }
-        if (!is_dir($targetDirectory)) {
-            $this->error("Error: Target directory not found");
+        if (! is_dir($targetDirectory)) {
+            $this->error('Error: Target directory not found');
+
             return self::FAILURE;
         }
 
@@ -67,7 +69,7 @@ class LaramaidCommand extends Command
 
                         // mermaid -> php
                         $phpParams = [];
-                        if (!empty($parameters)) {
+                        if (! empty($parameters)) {
                             $params = explode(',', $parameters);
                             foreach ($params as $param) {
                                 $parts = explode(':', trim($param));
@@ -81,7 +83,7 @@ class LaramaidCommand extends Command
                             'visibility' => $visibility,
                             'name' => $methodName,
                             'parameters' => implode(', ', $phpParams),
-                            'returnType' => $returnType
+                            'returnType' => $returnType,
                         ];
                     }
 
@@ -101,11 +103,11 @@ class LaramaidCommand extends Command
             'Enums' => 'make:enum',
             'Policies' => 'make:policy',
             'Notifications' => 'make:notification',
-            'Requests' => 'make:request'
+            'Requests' => 'make:request',
         ];
 
         $commandOptions = [
-            'make:model' => ' -fm'
+            'make:model' => ' -fm',
         ];
 
         foreach ($namespaces as $namespace => $classes) {
@@ -160,10 +162,11 @@ class LaramaidCommand extends Command
             'Enums' => 'app/Enums',
             'Policies' => 'app/Policies',
             'Notifications' => 'app/Notifications',
-            'Requests' => 'app/Http/Requests'
+            'Requests' => 'app/Http/Requests',
         ];
 
         $basePath = isset($paths[$namespace]) ? $paths[$namespace] : 'app';
+
         return "$targetDirectory/$basePath/$className.php";
     }
 
@@ -172,7 +175,9 @@ class LaramaidCommand extends Command
         $content = file_get_contents($classPath);
 
         $insertPosition = strrpos($content, '}');
-        if ($insertPosition === false) return;
+        if ($insertPosition === false) {
+            return;
+        }
 
         $methodsCode = "\n";
         foreach ($methods as $method) {

@@ -1,6 +1,6 @@
 {
     "name": "fase22/laramaid",
-    "description": "A bridge between Laravel and Mermaid. You can go both directions: Either scan your Laravel Application and generate a ERD from it or pass an ERD for code generation.",
+    "description": "A bridge between Laravel and Mermaid.",
     "keywords": [
         "fase22",
         "laravel",

@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Fase22\Laramaid\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaramaidCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laramaid';
 
     public $description = 'My command';
 

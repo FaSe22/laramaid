@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Database\Factories;
+namespace Fase22\Laramaid\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

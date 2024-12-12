@@ -1,11 +1,29 @@
-# A bridge between Laravel and Mermaid. You can go both directions: Either scan your Laravel Application and generate a ERD from it or pass an ERD for code generation.
+# A bridge between Laravel and Mermaid. 
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fase22/laramaid.svg?style=flat-square)](https://packagist.org/packages/fase22/laramaid)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/fase22/laramaid/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/fase22/laramaid/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/fase22/laramaid/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/fase22/laramaid/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/fase22/laramaid.svg?style=flat-square)](https://packagist.org/packages/fase22/laramaid)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+You can go both directions: Either scan your Laravel Application and generate a class diagram from it or pass an class diagram for code generation.
+
+## Generate Class Diagram
+
+Laramaid will scan your Laravel Application and generate a Mermaid Class Diagram for it.
+This way your Diagram will always be up to date.
+
+### Github Action
+
+Feel free to integrate the Laramaid Class-Diagram-Generator in your workflow. 
+This ways you always get up to date diagrams that are part of version control.
+
+## Generate Laravel Boilerplate Code from your Class Diagram
+
+Laramaid can generate boilerplate code from your mermaid class diagram: models, controllers, policies, enums, etc.
+It supports method-stub and property generation.
+
+## TBD: 
+Generate migration columns and factories
 
 ## Support us
 

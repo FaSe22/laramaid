@@ -25,10 +25,12 @@ jobs:
             testbench: 9.*
             carbon: ^2.63
             collision: ^8.5
+            pest: ^3.0
           - laravel: 10.*
             testbench: 8.*
             carbon: ^2.63
             collision: ^7.0
+            pest: ^2.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -50,7 +52,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "nunomaduro/collision:${{matrix.collision}}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.os == 'windows-latest' && '^^^' || '' }}${{ matrix.carbon }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "pestphp/pest:${{matrix.pest}}" "nunomaduro/collision:${{matrix.collision}}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:${{ matrix.os == 'windows-latest' && '^^^' || '' }}${{ matrix.carbon }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: List Installed Dependencies

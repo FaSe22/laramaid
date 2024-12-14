@@ -1,6 +1,6 @@
 <?php
 
-namespace Fase22\Laramaid;
+namespace Fase22\Laramaid\Mermaid;
 
 class MermaidProperty
 {

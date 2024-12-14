@@ -2,8 +2,8 @@
 
 namespace Fase22\Laramaid\Commands;
 
-use Fase22\Laramaid\MermaidClass;
-use Fase22\Laramaid\MermaidParser;
+use Fase22\Laramaid\Mermaid\MermaidClass;
+use Fase22\Laramaid\Mermaid\MermaidParser;
 use Illuminate\Console\Command;
 
 class LaramaidCommand extends Command

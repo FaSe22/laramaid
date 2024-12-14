@@ -21,8 +21,9 @@ class LaramaidCommand extends Command
      * 2. Extracting namespace and class information
      * 3. Generating Laravel classes with proper structure
      *
-     * @param LaravelClassGenerator $generator Service for generating Laravel classes
+     * @param  LaravelClassGenerator  $generator  Service for generating Laravel classes
      * @return int Command exit code (SUCCESS or FAILURE)
+     *
      * @throws \Exception If file reading or parsing fails
      */
     public function handle(
@@ -30,7 +31,7 @@ class LaramaidCommand extends Command
     ): int {
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (!file_exists($mermaidFilePath)) {
+        if (! file_exists($mermaidFilePath)) {
             $this->error('Error: Mermaid file not found');
 
             return self::FAILURE;

@@ -29,7 +29,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 LaramaidCommand::class,
-                GenerateMermaidDiagram::class
+                GenerateMermaidDiagram::class,
             ]);
         }
     }

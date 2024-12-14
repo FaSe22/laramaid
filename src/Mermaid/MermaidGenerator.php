@@ -6,8 +6,7 @@ class MermaidGenerator
 {
     public function __construct(
         private readonly MermaidDiagramBuilder $builder
-    ) {
-    }
+    ) {}
 
     public function generate(array $namespaces): string
     {

@@ -2,6 +2,8 @@
 
 namespace Fase22\Laramaid\Commands;
 
+use Fase22\Laramaid\MermaidClass;
+use Fase22\Laramaid\MermaidParser;
 use Illuminate\Console\Command;
 
 class LaramaidCommand extends Command
@@ -15,84 +17,18 @@ class LaramaidCommand extends Command
         $targetDirectory = $this->argument('target_directory');
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (! file_exists($mermaidFilePath)) {
-            $this->error('Error: Mermaid file not found');
-
+        if (!file_exists($mermaidFilePath)) {
+            $this->error("Error: Mermaid file not found");
             return self::FAILURE;
         }
-        if (! is_dir($targetDirectory)) {
-            $this->error('Error: Target directory not found');
-
+        if (!is_dir($targetDirectory)) {
+            $this->error("Error: Target directory not found");
             return self::FAILURE;
         }
 
         $content = file_get_contents($mermaidFilePath);
-
-        $content = preg_replace('/%.*$/m', '', $content);
-        $content = preg_replace('/\n\s*\n/', "\n", $content);
-        $content = preg_replace('/note\s+"[^"]+"/s', '', $content);
-        $content = preg_replace('/direction\s+\w+/s', '', $content);
-
-        $pattern = '/namespace\s+(\w+)\s*{((?:[^{}]*|{(?:[^{}]*|{[^{}]*})*})*)}(?=\s*namespace|\s*$)/s';
-        preg_match_all($pattern, $content, $matches, PREG_SET_ORDER);
-
-        $namespaces = [];
-        $classMethods = [];
-
-        foreach ($matches as $index => $match) {
-            $namespaceName = $match[1];
-            $namespaceContent = $match[2];
-
-            if (preg_match_all('/class\s+(\w+)(?:\[[^\]]*\])?\s*{([^}]+)}/s', $namespaceContent, $classMatches, PREG_SET_ORDER)) {
-                $namespaces[$namespaceName] = [];
-
-                foreach ($classMatches as $classMatch) {
-                    $className = $classMatch[1];
-                    $classContent = $classMatch[2];
-
-                    $namespaces[$namespaceName][] = $className;
-
-                    // extract methods
-                    preg_match_all('/([+-])(\w+)\((.*?)\)(?:\s*:\s*(\w+))?/s', $classContent, $methodMatches, PREG_SET_ORDER);
-
-                    $methods = [];
-                    foreach ($methodMatches as $methodMatch) {
-                        $visibility = match ($methodMatch[1]) {
-                            '+' => 'public',
-                            '-' => 'private',
-                            '#' => 'protected',
-                            default => 'public'
-                        };
-                        $methodName = $methodMatch[2];
-                        $parameters = $methodMatch[3];
-                        $returnType = isset($methodMatch[4]) ? $methodMatch[4] : 'void';
-
-                        // mermaid -> php
-                        $phpParams = [];
-                        if (! empty($parameters)) {
-                            $params = explode(',', $parameters);
-                            foreach ($params as $param) {
-                                $parts = explode(':', trim($param));
-                                $paramName = trim($parts[0]);
-                                $paramType = isset($parts[1]) ? trim($parts[1]) : 'mixed';
-                                $phpParams[] = "$paramType \$$paramName";
-                            }
-                        }
-
-                        $methods[] = [
-                            'visibility' => $visibility,
-                            'name' => $methodName,
-                            'parameters' => implode(', ', $phpParams),
-                            'returnType' => $returnType,
-                        ];
-                    }
-
-                    $classMethods[$className] = $methods;
-                }
-
-                $namespaces[$namespaceName] = array_unique($namespaces[$namespaceName]);
-            }
-        }
+        $parser = new MermaidParser($content);
+        $namespaceData = $parser->parse()->getNamespaces();
 
         $namespaceCommands = [
             'Controllers' => 'make:controller',
@@ -103,55 +39,90 @@ class LaramaidCommand extends Command
             'Enums' => 'make:enum',
             'Policies' => 'make:policy',
             'Notifications' => 'make:notification',
-            'Requests' => 'make:request',
+            'Requests' => 'make:request'
         ];
 
         $commandOptions = [
-            'make:model' => ' -fm',
+            'make:model' => ' -fm'
         ];
 
-        foreach ($namespaces as $namespace => $classes) {
-            if (isset($namespaceCommands[$namespace])) {
-                $baseCommand = $namespaceCommands[$namespace];
-                $options = isset($commandOptions[$baseCommand]) ? $commandOptions[$baseCommand] : '';
+        foreach ($namespaceData as $namespaceName => $classes) {
+            if (!isset($namespaceCommands[$namespaceName])) {
+                $this->warn("No command defined for namespace: $namespaceName");
+                continue;
+            }
 
-                foreach ($classes as $className) {
-                    $command = sprintf('php artisan %s %s%s', $baseCommand, $className, $options);
+            $baseCommand = $namespaceCommands[$namespaceName];
+            $options = $commandOptions[$baseCommand] ?? '';
 
-                    $currentDir = getcwd();
-                    chdir($targetDirectory);
+            foreach ($classes as $className => $classData) {
+                /** @var MermaidClass $classData */
+                $command = sprintf('php artisan %s %s%s', $baseCommand, $className, $options);
 
-                    $this->info("Executing for namespace $namespace: $command");
-                    exec($command, $output, $returnVar);
+                $currentDir = getcwd();
+                chdir($targetDirectory);
 
-                    if ($returnVar === 0 && isset($classMethods[$className])) {
-                        $classPath = $this->determineClassPath($targetDirectory, $namespace, $className);
-                        if (file_exists($classPath)) {
-                            $this->addMethodsToClass($classPath, $classMethods[$className]);
-                        }
-                    }
+                $this->info("Executing for namespace $namespaceName: $command");
+                exec($command, $output, $returnVar);
 
-                    if ($output) {
-                        $this->line(implode("\n", $output));
-                    }
-
-                    chdir($currentDir);
-
-                    if ($returnVar !== 0) {
-                        $this->warn("Command failed for $className with return code $returnVar");
+                if ($returnVar === 0) {
+                    $classPath = $this->determineClassPath($targetDirectory, $namespaceName, $className);
+                    if (file_exists($classPath)) {
+                        $this->updateClass($classPath, $classData);
                     }
                 }
-            } else {
-                $this->warn("No command defined for namespace: $namespace");
+
+                if ($output) {
+                    $this->line(implode("\n", $output));
+                }
+
+                chdir($currentDir);
+
+                if ($returnVar !== 0) {
+                    $this->warn("Command failed for $className with return code $returnVar");
+                }
             }
         }
 
         $this->info('Done!');
-
         return self::SUCCESS;
     }
 
-    private function determineClassPath($targetDirectory, $namespace, $className)
+    private function updateClass(string $classPath, MermaidClass $classData): void
+    {
+        $content = file_get_contents($classPath);
+
+        // Füge Properties hinzu
+        if (!empty($classData->properties)) {
+            if (preg_match('/class\s+\w+(?:\s+extends\s+\w+)?(?:\s+implements\s+[\w,\s]+)?\s*{/', $content, $matches, PREG_OFFSET_CAPTURE)) {
+                $insertPosition = $matches[0][1] + strlen($matches[0][0]);
+
+                $propertyCode = "\n";
+                foreach ($classData->properties as $property) {
+                    /** @var MermaidProperty $property */
+                    $propertyCode .= $property->toPhp() . "\n";
+                }
+
+                $content = substr_replace($content, $propertyCode, $insertPosition, 0);
+            }
+        }
+
+        // Füge Methoden hinzu
+        $insertPosition = strrpos($content, '}');
+        if ($insertPosition !== false) {
+            $methodCode = "\n";
+            foreach ($classData->methods as $method) {
+                /** @var MermaidMethod $method */
+                $methodCode .= $method->toPhp() . "\n";
+            }
+
+            $content = substr_replace($content, $methodCode, $insertPosition, 0);
+        }
+
+        file_put_contents($classPath, $content);
+    }
+
+    private function determineClassPath($targetDirectory, $namespace, $className): string
     {
         $paths = [
             'Controllers' => 'app/Http/Controllers',
@@ -162,39 +133,10 @@ class LaramaidCommand extends Command
             'Enums' => 'app/Enums',
             'Policies' => 'app/Policies',
             'Notifications' => 'app/Notifications',
-            'Requests' => 'app/Http/Requests',
+            'Requests' => 'app/Http/Requests'
         ];
 
-        $basePath = isset($paths[$namespace]) ? $paths[$namespace] : 'app';
-
+        $basePath = $paths[$namespace] ?? 'app';
         return "$targetDirectory/$basePath/$className.php";
-    }
-
-    private function addMethodsToClass($classPath, $methods)
-    {
-        $content = file_get_contents($classPath);
-
-        $insertPosition = strrpos($content, '}');
-        if ($insertPosition === false) {
-            return;
-        }
-
-        $methodsCode = "\n";
-        foreach ($methods as $method) {
-            $methodsCode .= sprintf(
-                "    /**\n     * %s\n     * @param %s\n     * @return %s\n     */\n    %s function %s(%s): %s\n    {\n        //TODO: Implement %s\n    }\n\n",
-                ucfirst($method['name']),
-                $method['parameters'],
-                $method['returnType'],
-                $method['visibility'],
-                $method['name'],
-                $method['parameters'],
-                $method['returnType'],
-                $method['name']
-            );
-        }
-
-        $newContent = substr_replace($content, $methodsCode, $insertPosition, 0);
-        file_put_contents($classPath, $newContent);
     }
 }

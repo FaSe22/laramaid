@@ -18,12 +18,14 @@ class LaramaidCommand extends Command
         $targetDirectory = $this->argument('target_directory');
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (!file_exists($mermaidFilePath)) {
-            $this->error("Error: Mermaid file not found");
+        if (! file_exists($mermaidFilePath)) {
+            $this->error('Error: Mermaid file not found');
+
             return self::FAILURE;
         }
-        if (!is_dir($targetDirectory)) {
-            $this->error("Error: Target directory not found");
+        if (! is_dir($targetDirectory)) {
+            $this->error('Error: Target directory not found');
+
             return self::FAILURE;
         }
 
@@ -35,9 +37,11 @@ class LaramaidCommand extends Command
             $generator->generate($targetDirectory, $namespaceData);
 
             $this->info('Done!');
+
             return self::SUCCESS;
         } catch (\Exception $e) {
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }

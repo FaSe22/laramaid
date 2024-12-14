@@ -13,12 +13,13 @@ class PathResolver
         'Enums' => 'app/Enums',
         'Policies' => 'app/Policies',
         'Notifications' => 'app/Notifications',
-        'Requests' => 'app/Http/Requests'
+        'Requests' => 'app/Http/Requests',
     ];
 
     public function resolveClassPath(string $targetDirectory, string $namespace, string $className): string
     {
         $basePath = $this->paths[$namespace] ?? 'app';
+
         return "$targetDirectory/$basePath/$className.php";
     }
 }

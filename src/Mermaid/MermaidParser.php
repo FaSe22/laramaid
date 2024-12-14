@@ -5,7 +5,9 @@ namespace Fase22\Laramaid\Mermaid;
 class MermaidParser
 {
     private string $content;
+
     private array $namespaces = [];
+
     private array $classes = [];
 
     public function __construct(string $content)
@@ -16,6 +18,7 @@ class MermaidParser
     public function parse(): self
     {
         $this->parseNamespaces();
+
         return $this;
     }
 
@@ -30,6 +33,7 @@ class MermaidParser
         $content = preg_replace('/\n\s*\n/', "\n", $content);
         $content = preg_replace('/note\s+"[^"]+"/s', '', $content);
         $content = preg_replace('/direction\s+\w+/s', '', $content);
+
         return $content;
     }
 
@@ -61,6 +65,7 @@ class MermaidParser
                 );
             }
         }
+
         return $classes;
     }
 

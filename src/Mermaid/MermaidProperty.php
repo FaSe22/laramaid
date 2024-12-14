@@ -8,8 +8,7 @@ class MermaidProperty
         public readonly string $name,
         public readonly string $visibility,
         public readonly string $type
-    ) {
-    }
+    ) {}
 
     public function toPhp(): string
     {

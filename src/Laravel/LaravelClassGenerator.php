@@ -15,11 +15,11 @@ class LaravelClassGenerator
         'Enums' => 'make:enum',
         'Policies' => 'make:policy',
         'Notifications' => 'make:notification',
-        'Requests' => 'make:request'
+        'Requests' => 'make:request',
     ];
 
     private array $commandOptions = [
-        'make:model' => ' -fm'
+        'make:model' => ' -fm',
     ];
 
     public function __construct(
@@ -30,7 +30,7 @@ class LaravelClassGenerator
     public function generate(string $targetDirectory, array $namespaceData): void
     {
         foreach ($namespaceData as $namespaceName => $classes) {
-            if (!isset($this->namespaceCommands[$namespaceName])) {
+            if (! isset($this->namespaceCommands[$namespaceName])) {
                 continue;
             }
 

@@ -7,23 +7,26 @@ use Fase22\Laramaid\Mermaid\MermaidMethod;
 use Fase22\Laramaid\Mermaid\MermaidProperty;
 use PhpParser\BuilderFactory;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
 use PhpParser\PhpVersion;
 use PhpParser\PrettyPrinter;
-use PhpParser\Node\Stmt\Class_;
 
 class ClassUpdater
 {
     private $parser;
+
     private $printer;
+
     private $factory;
+
     private $nodeFinder;
 
     public function __construct()
     {
         $this->parser = (new ParserFactory)->createForVersion(PhpVersion::getHostVersion());
-        $this->printer = new PrettyPrinter\Standard();
+        $this->printer = new PrettyPrinter\Standard;
         $this->factory = new BuilderFactory;
         $this->nodeFinder = new NodeFinder;
     }
@@ -33,8 +36,8 @@ class ClassUpdater
         $code = file_get_contents($classPath);
         $ast = $this->parser->parse($code);
 
-        if (!$ast) {
-            throw new \RuntimeException("Failed to parse the class file.");
+        if (! $ast) {
+            throw new \RuntimeException('Failed to parse the class file.');
         }
 
         // Finde die Klassen-Node
@@ -43,8 +46,8 @@ class ClassUpdater
             return $node instanceof Class_;
         });
 
-        if (!$classNode) {
-            throw new \RuntimeException("No class definition found.");
+        if (! $classNode) {
+            throw new \RuntimeException('No class definition found.');
         }
 
         // Füge Properties hinzu
@@ -105,7 +108,7 @@ class ClassUpdater
         // Füge TODO-Kommentar im Body hinzu
         $methodBuilder->addStmt(
             new Node\Stmt\Nop([
-                'comments' => [new \PhpParser\Comment\Doc("// TODO: Implement {$method->name}")]
+                'comments' => [new \PhpParser\Comment\Doc("// TODO: Implement {$method->name}")],
             ])
         );
 
@@ -125,16 +128,16 @@ class ClassUpdater
         );
 
         $docs = [
-            "/**",
-            " * " . ucfirst($method->name),
+            '/**',
+            ' * '.ucfirst($method->name),
         ];
 
-        if (!empty($paramDocs)) {
+        if (! empty($paramDocs)) {
             $docs = array_merge($docs, $paramDocs);
         }
 
         $docs[] = " * @return {$method->returnType}";
-        $docs[] = " */";
+        $docs[] = ' */';
 
         return implode("\n", $docs);
     }

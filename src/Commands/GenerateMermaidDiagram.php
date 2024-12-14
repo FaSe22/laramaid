@@ -21,8 +21,9 @@ class GenerateMermaidDiagram extends Command
         $targetDirectory = $this->argument('target_directory') ?? app_path();
         $outputFile = $this->option('output');
 
-        if (!is_dir($targetDirectory)) {
+        if (! is_dir($targetDirectory)) {
             $this->error("Directory not found: $targetDirectory");
+
             return self::FAILURE;
         }
 
@@ -40,6 +41,7 @@ class GenerateMermaidDiagram extends Command
             return self::SUCCESS;
         } catch (\Exception $e) {
             $this->error($e->getMessage());
+
             return self::FAILURE;
         }
     }

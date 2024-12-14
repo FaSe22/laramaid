@@ -33,14 +33,15 @@ class MermaidDiagramBuilder
             $lines[] = $this->formatMethod($method);
         }
 
-        $lines[] = "    }";
+        $lines[] = '    }';
+
         return implode("\n", $lines);
     }
 
     private function formatProperty(MermaidProperty $property): string
     {
         return sprintf(
-            "        %s%s: %s",
+            '        %s%s: %s',
             $this->getVisibilitySymbol($property->visibility),
             $property->name,
             $property->type
@@ -55,7 +56,7 @@ class MermaidDiagramBuilder
         );
 
         return sprintf(
-            "        %s%s(%s): %s",
+            '        %s%s(%s): %s',
             $this->getVisibilitySymbol($method->visibility),
             $method->name,
             implode(', ', $params),

@@ -2,16 +2,22 @@
 
 namespace Fase22\Laramaid\Laravel;
 
+use Fase22\Laramaid\Mermaid\MermaidClass;
+use Fase22\Laramaid\Mermaid\MermaidMethod;
+use Fase22\Laramaid\Mermaid\MermaidParameter;
+use Fase22\Laramaid\Mermaid\MermaidProperty;
 use PhpParser\Node;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
-use PhpParser\Node\Stmt\{Class_, ClassMethod, Property, Namespace_};
-use Fase22\Laramaid\Mermaid\{MermaidClass, MermaidMethod, MermaidProperty, MermaidParameter};
 use PhpParser\PhpVersion;
 
 class LaravelClassExtractor
 {
     private $parser;
+
     private $nodeFinder;
 
     public function __construct()
@@ -23,6 +29,7 @@ class LaravelClassExtractor
     public function extractFromDirectory(string $directory): array
     {
         $files = $this->findPhpFiles($directory);
+
         return $this->analyzeFiles($files);
     }
 
@@ -38,6 +45,7 @@ class LaravelClassExtractor
                 $files[] = $file->getPathname();
             }
         }
+
         return $files;
     }
 
@@ -50,10 +58,12 @@ class LaravelClassExtractor
             $ast = $this->parser->parse($code);
 
             $namespace = $this->nodeFinder->findFirst($ast, fn (Node $node) => $node instanceof Namespace_);
-            if (!$namespace) continue;
+            if (! $namespace) {
+                continue;
+            }
 
             $namespaceName = $this->normalizeNamespace($namespace->name->toString());
-            if (!isset($namespaces[$namespaceName])) {
+            if (! isset($namespaces[$namespaceName])) {
                 $namespaces[$namespaceName] = [];
             }
 
@@ -63,7 +73,7 @@ class LaravelClassExtractor
             }
         }
 
-        return array_filter($namespaces, fn ($classes) => !empty($classes));
+        return array_filter($namespaces, fn ($classes) => ! empty($classes));
     }
 
     private function normalizeNamespace(string $namespace): string
@@ -113,6 +123,7 @@ class LaravelClassExtractor
                 returnType: $returnType
             );
         }
+
         return $methods;
     }
 
@@ -125,13 +136,14 @@ class LaravelClassExtractor
                 type: $param->type ? $this->getTypeName($param->type) : 'mixed'
             );
         }
+
         return $parameters;
     }
 
     private function getTypeName($type): string
     {
         if ($type instanceof Node\NullableType) {
-            return '?' . $this->getTypeName($type->type);
+            return '?'.$this->getTypeName($type->type);
         }
 
         if ($type instanceof Node\UnionType) {
@@ -162,8 +174,13 @@ class LaravelClassExtractor
 
     private function getVisibility(Node $node): string
     {
-        if ($node->isPublic()) return 'public';
-        if ($node->isProtected()) return 'protected';
+        if ($node->isPublic()) {
+            return 'public';
+        }
+        if ($node->isProtected()) {
+            return 'protected';
+        }
+
         return 'private';
     }
 
@@ -182,6 +199,7 @@ class LaravelClassExtractor
                 );
             }
         }
+
         return $properties;
     }
 }

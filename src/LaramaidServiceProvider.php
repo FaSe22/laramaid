@@ -2,6 +2,7 @@
 
 namespace Fase22\Laramaid;
 
+use Fase22\Laramaid\Commands\GenerateMermaidDiagram;
 use Fase22\Laramaid\Commands\LaramaidCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -28,6 +29,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 LaramaidCommand::class,
+                GenerateMermaidDiagram::class
             ]);
         }
     }

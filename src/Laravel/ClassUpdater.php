@@ -37,7 +37,7 @@ class ClassUpdater
         $code = file_get_contents($classPath);
         $ast = $this->parser->parse($code);
 
-        if (!$ast) {
+        if (! $ast) {
             throw new \RuntimeException('Failed to parse the class file.');
         }
 
@@ -47,7 +47,7 @@ class ClassUpdater
             return $node instanceof Class_;
         });
 
-        if (!$classNode) {
+        if (! $classNode) {
             throw new \RuntimeException('No class definition found.');
         }
 
@@ -130,10 +130,10 @@ class ClassUpdater
 
         $docs = [
             '/**',
-            ' * ' . ucfirst($method->name),
+            ' * '.ucfirst($method->name),
         ];
 
-        if (!empty($paramDocs)) {
+        if (! empty($paramDocs)) {
             $docs = array_merge($docs, $paramDocs);
         }
 

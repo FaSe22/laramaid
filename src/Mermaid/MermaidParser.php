@@ -8,7 +8,6 @@ class MermaidParser
 
     private array $namespaces = [];
 
-
     public function __construct(string $content)
     {
         $this->content = $this->cleanContent($content);

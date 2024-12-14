@@ -8,23 +8,30 @@ use Illuminate\Console\Command;
 
 class LaramaidCommand extends Command
 {
-    public $signature = 'laramaid {target_directory} {mermaid_file}';
+    public $signature = 'laramaid {mermaid_file}';
 
     public $description = 'Generate Laravel classes from Mermaid class diagram';
 
+    /**
+     * Execute the console command.
+     * This command reads a Mermaid class diagram and generates corresponding Laravel classes.
+     *
+     * The process involves:
+     * 1. Reading and parsing the Mermaid file
+     * 2. Extracting namespace and class information
+     * 3. Generating Laravel classes with proper structure
+     *
+     * @param LaravelClassGenerator $generator Service for generating Laravel classes
+     * @return int Command exit code (SUCCESS or FAILURE)
+     * @throws \Exception If file reading or parsing fails
+     */
     public function handle(
         LaravelClassGenerator $generator
     ): int {
-        $targetDirectory = $this->argument('target_directory');
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (! file_exists($mermaidFilePath)) {
+        if (!file_exists($mermaidFilePath)) {
             $this->error('Error: Mermaid file not found');
-
-            return self::FAILURE;
-        }
-        if (! is_dir($targetDirectory)) {
-            $this->error('Error: Target directory not found');
 
             return self::FAILURE;
         }
@@ -34,7 +41,7 @@ class LaramaidCommand extends Command
             $parser = new MermaidParser($content);
             $namespaceData = $parser->parse()->getNamespaces();
 
-            $generator->generate($targetDirectory, $namespaceData);
+            $generator->generate('./', $namespaceData);
 
             $this->info('Done!');
 

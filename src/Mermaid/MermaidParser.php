@@ -8,7 +8,6 @@ class MermaidParser
 
     private array $namespaces = [];
 
-    private array $classes = [];
 
     public function __construct(string $content)
     {
@@ -27,6 +26,13 @@ class MermaidParser
         return $this->namespaces;
     }
 
+    /**
+     * Clean the mermaid content by removing:
+     * - Comments (starting with %)
+     * - Empty lines
+     * - Note blocks
+     * - Direction statements
+     */
     private function cleanContent(string $content): string
     {
         $content = preg_replace('/%.*$/m', '', $content);
@@ -37,6 +43,15 @@ class MermaidParser
         return $content;
     }
 
+    /**
+     * Parse namespace blocks from the mermaid content
+     *
+     * Regex explanation:
+     * namespace\s+(\w+)\s*{        - Match namespace keyword, name and opening brace
+     * ((?:[^{}]*|                  - Start capture group for content, match non-brace characters
+     * {(?:[^{}]*|{[^{}]*})*})*)}  - Or match nested braces with their content recursively
+     * (?=\s*namespace|\s*$)        - Lookahead for next namespace or end of string
+     */
     private function parseNamespaces(): void
     {
         $pattern = '/namespace\s+(\w+)\s*{((?:[^{}]*|{(?:[^{}]*|{[^{}]*})*})*)}(?=\s*namespace|\s*$)/s';
@@ -69,6 +84,14 @@ class MermaidParser
         return $classes;
     }
 
+    /**
+     * Parse class definitions within a namespace block
+     *
+     * Regex explanation:
+     * class\s+(\w+)               - Match class keyword and capture class name
+     * (?:\[[^\]]*\])?            - Optional description in square brackets
+     * \s*{([^}]+)}               - Match class content between braces
+     */
     private function parseMethods(string $classContent): array
     {
         $methods = [];
@@ -86,6 +109,15 @@ class MermaidParser
         return $methods;
     }
 
+    /**
+     * Parse method definitions from class content
+     *
+     * Regex explanation:
+     * ([+-])                      - Capture visibility symbol (+ or -)
+     * (\w+)                       - Capture method name
+     * \((.*?)\)                   - Capture parameter list
+     * (?:\s*:\s*(\w+))?          - Optional return type after colon
+     */
     private function parseProperties(string $classContent): array
     {
         $properties = [];
@@ -102,6 +134,14 @@ class MermaidParser
         return $properties;
     }
 
+    /**
+     * Parse property definitions from class content
+     *
+     * Regex explanation:
+     * ([+-])                      - Capture visibility symbol
+     * (\w+)                       - Capture property name
+     * :\s*(\w+)                   - Capture type after colon
+     */
     private function parseVisibility(string $symbol): string
     {
         return match ($symbol) {

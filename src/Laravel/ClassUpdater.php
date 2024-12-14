@@ -6,6 +6,7 @@ use Fase22\Laramaid\Mermaid\MermaidClass;
 use Fase22\Laramaid\Mermaid\MermaidMethod;
 use Fase22\Laramaid\Mermaid\MermaidProperty;
 use PhpParser\BuilderFactory;
+use PhpParser\Modifiers;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\NodeFinder;
@@ -36,7 +37,7 @@ class ClassUpdater
         $code = file_get_contents($classPath);
         $ast = $this->parser->parse($code);
 
-        if (! $ast) {
+        if (!$ast) {
             throw new \RuntimeException('Failed to parse the class file.');
         }
 
@@ -46,7 +47,7 @@ class ClassUpdater
             return $node instanceof Class_;
         });
 
-        if (! $classNode) {
+        if (!$classNode) {
             throw new \RuntimeException('No class definition found.');
         }
 
@@ -129,10 +130,10 @@ class ClassUpdater
 
         $docs = [
             '/**',
-            ' * '.ucfirst($method->name),
+            ' * ' . ucfirst($method->name),
         ];
 
-        if (! empty($paramDocs)) {
+        if (!empty($paramDocs)) {
             $docs = array_merge($docs, $paramDocs);
         }
 
@@ -145,9 +146,9 @@ class ClassUpdater
     private function getVisibilityFlag(string $visibility): int
     {
         return match ($visibility) {
-            'private' => Class_::MODIFIER_PRIVATE,
-            'protected' => Class_::MODIFIER_PROTECTED,
-            default => Class_::MODIFIER_PUBLIC
+            'private' => Modifiers::PRIVATE,
+            'protected' => Modifiers::PROTECTED,
+            default => Modifiers::PUBLIC
         };
     }
 }

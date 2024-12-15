@@ -6,7 +6,7 @@ use Fase22\Laramaid\Mermaid\MermaidMethod;
 use Fase22\Laramaid\Mermaid\MermaidProperty;
 
 test('updater adds properties to existing class', function () {
-    $tempDir = sys_get_temp_dir() . '/laramaid_test_' . uniqid();
+    $tempDir = sys_get_temp_dir().'/laramaid_test_'.uniqid();
     mkdir($tempDir);
 
     $classContent = <<<'PHP'
@@ -17,32 +17,32 @@ class User {
 }
 PHP;
 
-    file_put_contents($tempDir . '/User.php', $classContent);
+    file_put_contents($tempDir.'/User.php', $classContent);
 
-    $updater = new ClassUpdater();
+    $updater = new ClassUpdater;
     $class = new MermaidClass(
         name: 'User',
         methods: [],
         properties: [
-            new MermaidProperty('name', 'public', 'string')
+            new MermaidProperty('name', 'public', 'string'),
         ]
     );
 
-    $updater->update($tempDir . '/User.php', $class);
+    $updater->update($tempDir.'/User.php', $class);
 
-    $updatedContent = file_get_contents($tempDir . '/User.php');
+    $updatedContent = file_get_contents($tempDir.'/User.php');
 
     expect($updatedContent)
         ->toContain('public string $name;')
         ->toContain('@var string');
 
     // Cleanup
-    unlink($tempDir . '/User.php');
+    unlink($tempDir.'/User.php');
     rmdir($tempDir);
 });
 
 test('updater preserves existing class content', function () {
-    $tempDir = sys_get_temp_dir() . '/laramaid_test_' . uniqid();
+    $tempDir = sys_get_temp_dir().'/laramaid_test_'.uniqid();
     mkdir($tempDir);
 
     $classContent = <<<'PHP'
@@ -54,20 +54,20 @@ class User {
 }
 PHP;
 
-    file_put_contents($tempDir . '/User.php', $classContent);
+    file_put_contents($tempDir.'/User.php', $classContent);
 
-    $updater = new ClassUpdater();
+    $updater = new ClassUpdater;
     $class = new MermaidClass(
         name: 'User',
         methods: [
-            new MermaidMethod('getName', 'public', [], 'string')
+            new MermaidMethod('getName', 'public', [], 'string'),
         ],
         properties: []
     );
 
-    $updater->update($tempDir . '/User.php', $class);
+    $updater->update($tempDir.'/User.php', $class);
 
-    $updatedContent = file_get_contents($tempDir . '/User.php');
+    $updatedContent = file_get_contents($tempDir.'/User.php');
 
     expect($updatedContent)
         ->toContain('private int $id;')
@@ -75,6 +75,6 @@ PHP;
         ->toContain('return string');
 
     // Cleanup
-    unlink($tempDir . '/User.php');
+    unlink($tempDir.'/User.php');
     rmdir($tempDir);
 });

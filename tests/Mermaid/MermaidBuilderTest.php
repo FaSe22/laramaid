@@ -7,7 +7,7 @@ use Fase22\Laramaid\Mermaid\MermaidParameter;
 use Fase22\Laramaid\Mermaid\MermaidProperty;
 
 test('builder creates valid mermaid syntax', function () {
-    $builder = new MermaidDiagramBuilder();
+    $builder = new MermaidDiagramBuilder;
 
     $class = new MermaidClass(
         name: 'User',
@@ -17,14 +17,14 @@ test('builder creates valid mermaid syntax', function () {
                 visibility: 'public',
                 parameters: [],
                 returnType: 'string'
-            )
+            ),
         ],
         properties: [
             new MermaidProperty(
                 name: 'name',
                 visibility: 'private',
                 type: 'string'
-            )
+            ),
         ]
     );
 
@@ -41,14 +41,14 @@ test('builder creates valid mermaid syntax', function () {
 });
 
 test('builder handles empty namespaces', function () {
-    $builder = new MermaidDiagramBuilder();
+    $builder = new MermaidDiagramBuilder;
     $diagram = $builder->build([]);
 
     expect($diagram)->toBe("classDiagram\n");
 });
 
 test('builder correctly formats method parameters', function () {
-    $builder = new MermaidDiagramBuilder();
+    $builder = new MermaidDiagramBuilder;
 
     $class = new MermaidClass(
         name: 'UserController',
@@ -58,10 +58,10 @@ test('builder correctly formats method parameters', function () {
                 visibility: 'public',
                 parameters: [
                     new MermaidParameter('request', 'Request'),
-                    new MermaidParameter('valid', 'bool')
+                    new MermaidParameter('valid', 'bool'),
                 ],
                 returnType: 'Response'
-            )
+            ),
         ],
         properties: []
     );

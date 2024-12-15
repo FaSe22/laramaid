@@ -3,7 +3,7 @@
 use Fase22\Laramaid\Mermaid\MermaidParser;
 
 test('it can parse empty namespaces', function () {
-    $content = "namespace Models {}";
+    $content = 'namespace Models {}';
     $parser = new MermaidParser($content);
 
     $namespaces = $parser->parse()->getNamespaces();
@@ -13,7 +13,7 @@ test('it can parse empty namespaces', function () {
 });
 
 test('it can parse simple class', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Models {
     class User {
         +name: string
@@ -45,7 +45,7 @@ EOT;
 });
 
 test('it can parse class with method parameters', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Controllers {
     class UserController {
         +store(request: Request): Response
@@ -77,7 +77,7 @@ EOT;
 });
 
 test('it can parse multiple namespaces', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Models {
     class User {
         +id: int
@@ -100,7 +100,7 @@ EOT;
 });
 
 test('it correctly handles class descriptions', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Models {
     class User["User model with authentication"] {
         +id: int
@@ -115,7 +115,7 @@ EOT;
 });
 
 test('it cleans mermaid specific content', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 %% This is a comment
 direction LR
 note "This is a note" as N1
@@ -135,7 +135,7 @@ EOT;
 });
 
 test('it handles methods without return type', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Models {
     class User {
         +save()
@@ -150,7 +150,7 @@ EOT;
 });
 
 test('it handles methods with multiple parameters', function () {
-    $content = <<<EOT
+    $content = <<<'EOT'
 namespace Services {
     class UserService {
         +createUser(name: string, email: string, age: int): User

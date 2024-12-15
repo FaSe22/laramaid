@@ -3,7 +3,7 @@
 use Fase22\Laramaid\Laravel\PathResolver;
 
 test('resolver returns correct paths for different namespaces', function () {
-    $resolver = new PathResolver();
+    $resolver = new PathResolver;
     $baseDir = '/app';
 
     expect($resolver->resolveClassPath($baseDir, 'Controllers', 'UserController'))

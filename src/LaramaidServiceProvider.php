@@ -2,6 +2,7 @@
 
 namespace Fase22\Laramaid;
 
+use Fase22\Laramaid\Commands\GenerateFromJson;
 use Fase22\Laramaid\Commands\GenerateMermaidDiagram;
 use Fase22\Laramaid\Commands\LaramaidCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -30,6 +31,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
             $this->commands([
                 LaramaidCommand::class,
                 GenerateMermaidDiagram::class,
+                GenerateFromJson::class
             ]);
         }
 

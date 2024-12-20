@@ -18,7 +18,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laramaid')
-            ->hasConfigFile()
+            ->hasConfigFile('laramaid')
             ->hasViews()
             ->hasMigration('create_laramaid_table')
             ->hasCommand(LaramaidCommand::class);
@@ -32,5 +32,9 @@ class LaramaidServiceProvider extends PackageServiceProvider
                 GenerateMermaidDiagram::class,
             ]);
         }
+
+        $this->publishes([
+            __DIR__ . "/../config/laramaid.php" => config_path('laramaid.php')
+        ]);
     }
 }

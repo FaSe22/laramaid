@@ -13,7 +13,8 @@ class GenerateFromJson extends Command
     public $description = 'Generate Laravel classes from Mermaid class diagram';
 
     public function handle(
-        LaravelClassGenerator $generator
+        LaravelClassGenerator $generator,
+        Rehydrator $rehydrator
     ): int {
         $jsonFilePath = $this->argument('json_file');
 
@@ -25,7 +26,7 @@ class GenerateFromJson extends Command
 
         try {
             $json = json_decode(file_get_contents($jsonFilePath), true);
-            $namespaceData = ((new Rehydrator())->rehydrate($json));
+            $namespaceData = $rehydrator->rehydrate($json);
 
             $generator->generate('./', $namespaceData);
 

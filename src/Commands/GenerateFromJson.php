@@ -18,7 +18,7 @@ class GenerateFromJson extends Command
     ): int {
         $jsonFilePath = $this->argument('json_file');
 
-        if (!file_exists($jsonFilePath)) {
+        if (! file_exists($jsonFilePath)) {
             $this->error('Error: Json file not found');
 
             return self::FAILURE;

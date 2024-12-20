@@ -36,7 +36,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
         }
 
         $this->publishes([
-            __DIR__ . "/../config/laramaid.php" => config_path('laramaid.php')
+            __DIR__.'/../config/laramaid.php' => config_path('laramaid.php'),
         ]);
     }
 }

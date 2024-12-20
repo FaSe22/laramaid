@@ -21,7 +21,7 @@ class GenerateMermaidDiagram extends Command
         $targetDirectory = $this->argument('target_directory') ?? app_path();
         $outputFile = $this->option('output');
 
-        if (!is_dir($targetDirectory)) {
+        if (! is_dir($targetDirectory)) {
             $this->error("Directory not found: $targetDirectory");
 
             return self::FAILURE;
@@ -29,7 +29,7 @@ class GenerateMermaidDiagram extends Command
 
         try {
             $namespaces = $extractor->extractFromDirectory($targetDirectory);
-            file_put_contents("laramaid_generated.json", json_encode($namespaces));
+            file_put_contents('laramaid_generated.json', json_encode($namespaces));
             $mermaidContent = $generator->generate($namespaces);
 
             if ($outputFile) {

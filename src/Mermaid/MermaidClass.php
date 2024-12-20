@@ -8,6 +8,5 @@ class MermaidClass
         public readonly string $name,
         public readonly array $methods,
         public readonly array $properties
-    ) {
-    }
+    ) {}
 }

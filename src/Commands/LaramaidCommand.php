@@ -31,7 +31,7 @@ class LaramaidCommand extends Command
     ): int {
         $mermaidFilePath = $this->argument('mermaid_file');
 
-        if (!file_exists($mermaidFilePath)) {
+        if (! file_exists($mermaidFilePath)) {
             $this->error('Error: Mermaid file not found');
 
             return self::FAILURE;
@@ -43,7 +43,7 @@ class LaramaidCommand extends Command
             $namespaceData = $parser->parse()->getNamespaces();
 
             if (config('laramaid.generate-json')) {
-                file_put_contents("laramaid.json", json_encode($namespaceData));
+                file_put_contents('laramaid.json', json_encode($namespaceData));
             }
 
             $generator->generate('./', $namespaceData);

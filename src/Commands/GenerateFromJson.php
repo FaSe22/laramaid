@@ -17,7 +17,7 @@ class GenerateFromJson extends Command
     ): int {
         $jsonFilePath = $this->argument('json_file');
 
-        if (!file_exists($jsonFilePath)) {
+        if (! file_exists($jsonFilePath)) {
             $this->error('Error: Json file not found');
 
             return self::FAILURE;
@@ -25,7 +25,7 @@ class GenerateFromJson extends Command
 
         try {
             $json = json_decode(file_get_contents($jsonFilePath), true);
-            $namespaceData = ((new Rehydrator())->rehydrate($json));
+            $namespaceData = ((new Rehydrator)->rehydrate($json));
 
             $generator->generate('./', $namespaceData);
 

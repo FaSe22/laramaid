@@ -22,7 +22,6 @@ class MermaidParser
 
     public function getNamespaces(): array
     {
-        file_put_contents("laramaid.json", json_encode($this->namespaces));
         return $this->namespaces;
     }
 

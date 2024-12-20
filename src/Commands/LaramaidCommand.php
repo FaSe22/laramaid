@@ -2,7 +2,6 @@
 
 namespace Fase22\Laramaid\Commands;
 
-use Fase22\Laramaid\Json\Rehydrator;
 use Fase22\Laramaid\Laravel\LaravelClassGenerator;
 use Fase22\Laramaid\Mermaid\MermaidParser;
 use Illuminate\Console\Command;

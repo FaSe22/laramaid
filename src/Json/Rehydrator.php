@@ -9,7 +9,6 @@ use Fase22\Laramaid\Mermaid\MermaidProperty;
 
 class Rehydrator
 {
-
     public static function rehydrate(array $data): array
     {
         $result = [];
@@ -23,6 +22,7 @@ class Rehydrator
 
         return $result;
     }
+
     public static function rehydrateMermaidClass(array $data): MermaidClass
     {
         $methods = array_map(fn ($method) => self::rehydrateMermaidMethod($method), $data['methods'] ?? []);

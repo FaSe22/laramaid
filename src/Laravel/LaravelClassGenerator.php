@@ -28,15 +28,15 @@ class LaravelClassGenerator
     ) {
         $classes = config('laramaid.namespaces');
         foreach ($classes as $key => $value) {
-            $this->namespaceCommands[$key]  = 'make:class';
-            $this->commandOptions['make:class'] = ' --namespace=' . $value;
+            $this->namespaceCommands[$key] = 'make:class';
+            $this->commandOptions['make:class'] = ' --namespace='.$value;
         }
     }
 
     public function generate(string $targetDirectory, array $namespaceData): void
     {
         foreach ($namespaceData as $namespaceName => $classes) {
-            if (!isset($this->namespaceCommands[$namespaceName])) {
+            if (! isset($this->namespaceCommands[$namespaceName])) {
                 continue;
             }
 

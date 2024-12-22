@@ -46,9 +46,9 @@ class MakeClass extends Command
     public function handle()
     {
         $name = $this->argument('name');
-        $namespace = 'App\\' . ($this->option('namespace') ?? $this->argument('name'));
+        $namespace = 'App\\'.($this->option('namespace') ?? $this->argument('name'));
 
-        $classPath = base_path(str_replace('\\', DIRECTORY_SEPARATOR, $namespace)) . DIRECTORY_SEPARATOR . $name . '.php';
+        $classPath = base_path(str_replace('\\', DIRECTORY_SEPARATOR, $namespace)).DIRECTORY_SEPARATOR.$name.'.php';
 
         if ($this->files->exists($classPath)) {
             $this->error("Class already exists at $classPath");
@@ -101,7 +101,7 @@ EOT;
     {
         $directory = dirname($path);
 
-        if (!$this->files->isDirectory($directory)) {
+        if (! $this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }
     }

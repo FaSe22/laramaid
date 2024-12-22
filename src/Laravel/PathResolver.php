@@ -22,7 +22,7 @@ class PathResolver
         $classes = config('laramaid.namespaces');
 
         foreach ($classes as $key => $value) {
-            $this->paths[$key] = 'app/' . $value;
+            $this->paths[$key] = 'app/'.$value;
         }
 
         $basePath = $this->paths[$namespace] ?? 'app';

@@ -6,5 +6,5 @@ return [
     // which namespaces should be generated?
     'namespaces' => [
         'Services' => 'Services',
-    ]
+    ],
 ];

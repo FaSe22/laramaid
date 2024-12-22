@@ -19,6 +19,12 @@ class PathResolver
 
     public function resolveClassPath(string $targetDirectory, string $namespace, string $className): string
     {
+        $classes = config('laramaid.namespaces');
+
+        foreach ($classes as $key => $value) {
+            $this->paths[$key] = 'app/' . $value;
+        }
+
         $basePath = $this->paths[$namespace] ?? 'app';
 
         return "$targetDirectory/$basePath/$className.php";

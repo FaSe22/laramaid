@@ -5,7 +5,7 @@ namespace Fase22\Laramaid;
 use Fase22\Laramaid\Commands\GenerateFromJson;
 use Fase22\Laramaid\Commands\GenerateMermaidDiagram;
 use Fase22\Laramaid\Commands\LaramaidCommand;
-use Fase22\Laramaid\Commands\MakeServiceClass;
+use Fase22\Laramaid\Commands\MakeClass;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -32,13 +32,13 @@ class LaramaidServiceProvider extends PackageServiceProvider
             $this->commands([
                 LaramaidCommand::class,
                 GenerateMermaidDiagram::class,
-                MakeServiceClass::class,
+                MakeClass::class,
                 GenerateFromJson::class,
             ]);
         }
 
         $this->publishes([
-            __DIR__.'/../config/laramaid.php' => config_path('laramaid.php'),
+            __DIR__ . '/../config/laramaid.php' => config_path('laramaid.php'),
         ]);
     }
 }

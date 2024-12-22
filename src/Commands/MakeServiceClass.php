@@ -30,8 +30,6 @@ class MakeServiceClass extends Command
 
     /**
      * Create a new command instance.
-     *
-     * @param Filesystem $files
      */
     public function __construct(Filesystem $files)
     {
@@ -50,10 +48,11 @@ class MakeServiceClass extends Command
         $name = $this->argument('name');
         $namespace = rtrim($this->option('namespace'), '\\\\');
 
-        $classPath = base_path(str_replace('\\', DIRECTORY_SEPARATOR, $namespace)) . DIRECTORY_SEPARATOR . $name . '.php';
+        $classPath = base_path(str_replace('\\', DIRECTORY_SEPARATOR, $namespace)).DIRECTORY_SEPARATOR.$name.'.php';
 
         if ($this->files->exists($classPath)) {
             $this->error("Service class already exists at $classPath");
+
             return 1;
         }
 
@@ -69,6 +68,7 @@ class MakeServiceClass extends Command
         $this->files->put($classPath, $content);
 
         $this->info("Service class $name created successfully at $classPath");
+
         return 0;
     }
 
@@ -79,7 +79,7 @@ class MakeServiceClass extends Command
      */
     protected function getStub()
     {
-        return <<<EOT
+        return <<<'EOT'
 <?php
 
 namespace {{ namespace }};
@@ -94,14 +94,14 @@ EOT;
     /**
      * Create the directory for the class if it doesn’t exist.
      *
-     * @param string $path
+     * @param  string  $path
      * @return void
      */
     protected function makeDirectory($path)
     {
         $directory = dirname($path);
 
-        if (!$this->files->isDirectory($directory)) {
+        if (! $this->files->isDirectory($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }
     }

@@ -31,7 +31,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
             $this->commands([
                 LaramaidCommand::class,
                 GenerateMermaidDiagram::class,
-                MakeServiceClass::class
+                MakeServiceClass::class,
             ]);
         }
     }

@@ -29,6 +29,11 @@ class GenerateMermaidDiagram extends Command
 
         try {
             $namespaces = $extractor->extractFromDirectory($targetDirectory);
+
+            if (config('laramaid.generate-json')) {
+                file_put_contents('laramaid_generated.json', json_encode($namespaces));
+            }
+
             $mermaidContent = $generator->generate($namespaces);
 
             if ($outputFile) {

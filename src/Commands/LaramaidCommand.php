@@ -42,6 +42,10 @@ class LaramaidCommand extends Command
             $parser = new MermaidParser($content);
             $namespaceData = $parser->parse()->getNamespaces();
 
+            if (config('laramaid.generate-json')) {
+                file_put_contents('laramaid.json', json_encode($namespaceData));
+            }
+
             $generator->generate('./', $namespaceData);
 
             $this->info('Done!');

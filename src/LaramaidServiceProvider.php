@@ -2,6 +2,7 @@
 
 namespace Fase22\Laramaid;
 
+use Fase22\Laramaid\Commands\GenerateFromJson;
 use Fase22\Laramaid\Commands\GenerateMermaidDiagram;
 use Fase22\Laramaid\Commands\LaramaidCommand;
 use Fase22\Laramaid\Commands\MakeServiceClass;
@@ -19,7 +20,7 @@ class LaramaidServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('laramaid')
-            ->hasConfigFile()
+            ->hasConfigFile('laramaid')
             ->hasViews()
             ->hasMigration('create_laramaid_table')
             ->hasCommand(LaramaidCommand::class);
@@ -32,7 +33,12 @@ class LaramaidServiceProvider extends PackageServiceProvider
                 LaramaidCommand::class,
                 GenerateMermaidDiagram::class,
                 MakeServiceClass::class,
+                GenerateFromJson::class,
             ]);
         }
+
+        $this->publishes([
+            __DIR__.'/../config/laramaid.php' => config_path('laramaid.php'),
+        ]);
     }
 }

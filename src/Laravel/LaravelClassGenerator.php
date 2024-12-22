@@ -16,6 +16,7 @@ class LaravelClassGenerator
         'Policies' => 'make:policy',
         'Notifications' => 'make:notification',
         'Requests' => 'make:request',
+        'Services' => 'make:service'
     ];
 
     private array $commandOptions = [
@@ -25,12 +26,13 @@ class LaravelClassGenerator
     public function __construct(
         private readonly PathResolver $pathResolver,
         private readonly ClassUpdater $classUpdater
-    ) {}
+    ) {
+    }
 
     public function generate(string $targetDirectory, array $namespaceData): void
     {
         foreach ($namespaceData as $namespaceName => $classes) {
-            if (! isset($this->namespaceCommands[$namespaceName])) {
+            if (!isset($this->namespaceCommands[$namespaceName])) {
                 continue;
             }
 

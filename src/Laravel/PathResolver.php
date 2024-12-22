@@ -14,6 +14,7 @@ class PathResolver
         'Policies' => 'app/Policies',
         'Notifications' => 'app/Notifications',
         'Requests' => 'app/Http/Requests',
+        'Services' => 'app/Services'
     ];
 
     public function resolveClassPath(string $targetDirectory, string $namespace, string $className): string

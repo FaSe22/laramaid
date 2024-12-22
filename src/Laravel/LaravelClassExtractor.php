@@ -58,12 +58,12 @@ class LaravelClassExtractor
             $ast = $this->parser->parse($code);
 
             $namespace = $this->nodeFinder->findFirst($ast, fn (Node $node) => $node instanceof Namespace_);
-            if (!$namespace) {
+            if (! $namespace) {
                 continue;
             }
 
             $namespaceName = $this->normalizeNamespace($namespace->name->toString());
-            if (!isset($namespaces[$namespaceName])) {
+            if (! isset($namespaces[$namespaceName])) {
                 $namespaces[$namespaceName] = [];
             }
 
@@ -73,7 +73,7 @@ class LaravelClassExtractor
             }
         }
 
-        return array_filter($namespaces, fn ($classes) => !empty($classes));
+        return array_filter($namespaces, fn ($classes) => ! empty($classes));
     }
 
     private function normalizeNamespace(string $namespace): string
@@ -89,7 +89,7 @@ class LaravelClassExtractor
             'Enums' => 'Enums',
             'Policies' => 'Policies',
             'Http.Requests' => 'Requests',
-            'Services' => 'Services'
+            'Services' => 'Services',
         ];
 
         foreach ($mappings as $pattern => $replacement) {
@@ -144,7 +144,7 @@ class LaravelClassExtractor
     private function getTypeName($type): string
     {
         if ($type instanceof Node\NullableType) {
-            return '?' . $this->getTypeName($type->type);
+            return '?'.$this->getTypeName($type->type);
         }
 
         if ($type instanceof Node\UnionType) {

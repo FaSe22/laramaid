@@ -89,6 +89,7 @@ class LaravelClassExtractor
             'Enums' => 'Enums',
             'Policies' => 'Policies',
             'Http.Requests' => 'Requests',
+            'Services' => 'Services',
         ];
 
         foreach ($mappings as $pattern => $replacement) {

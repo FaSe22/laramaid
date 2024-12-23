@@ -25,7 +25,13 @@ class LaravelClassGenerator
     public function __construct(
         private readonly PathResolver $pathResolver,
         private readonly ClassUpdater $classUpdater
-    ) {}
+    ) {
+        $classes = config('laramaid.namespaces');
+        foreach ($classes as $key => $value) {
+            $this->namespaceCommands[$key] = 'make:class';
+            $this->commandOptions['make:class'] = ' --namespace='.$value;
+        }
+    }
 
     public function generate(string $targetDirectory, array $namespaceData): void
     {

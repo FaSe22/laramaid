@@ -13,6 +13,7 @@ use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\NodeFinder;
 use PhpParser\ParserFactory;
 use PhpParser\PhpVersion;
+use Symfony\Component\Finder\Finder;
 
 class LaravelClassExtractor
 {
@@ -35,15 +36,19 @@ class LaravelClassExtractor
 
     private function findPhpFiles(string $directory): array
     {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory)
-        );
+        $iterator = Finder::create()
+            ->ignoreDotFiles(true)
+            ->ignoreVCS(true)
+            ->ignoreUnreadableDirs()
+            ->ignoreVCSIgnored(true)
+            ->in($directory)
+            ->filter(fn ($el) => $el->getExtension() === 'php')
+            ->getIterator();
 
         $files = [];
+
         foreach ($iterator as $file) {
-            if ($file->isFile() && $file->getExtension() === 'php') {
-                $files[] = $file->getPathname();
-            }
+            $files[] = $file;
         }
 
         return $files;
@@ -58,12 +63,12 @@ class LaravelClassExtractor
             $ast = $this->parser->parse($code);
 
             $namespace = $this->nodeFinder->findFirst($ast, fn (Node $node) => $node instanceof Namespace_);
-            if (! $namespace) {
+            if (!$namespace) {
                 continue;
             }
 
             $namespaceName = $this->normalizeNamespace($namespace->name->toString());
-            if (! isset($namespaces[$namespaceName])) {
+            if (!isset($namespaces[$namespaceName])) {
                 $namespaces[$namespaceName] = [];
             }
 
@@ -73,7 +78,7 @@ class LaravelClassExtractor
             }
         }
 
-        return array_filter($namespaces, fn ($classes) => ! empty($classes));
+        return array_filter($namespaces, fn ($classes) => !empty($classes));
     }
 
     private function normalizeNamespace(string $namespace): string
@@ -144,7 +149,7 @@ class LaravelClassExtractor
     private function getTypeName($type): string
     {
         if ($type instanceof Node\NullableType) {
-            return '?'.$this->getTypeName($type->type);
+            return '?' . $this->getTypeName($type->type);
         }
 
         if ($type instanceof Node\UnionType) {
